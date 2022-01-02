@@ -55,7 +55,7 @@ void AVAILABLE_BOOKS();
 // MAIN FUNCTION ----------------------------------------
 int main()
 {
-    ADDBOOKS();
+    PASSWORD();
     return 0;
 }
 
@@ -168,7 +168,7 @@ void MAINPROGRAM()
     printf("\n");
     printf("\t\t\t\033[0;31m\xDB\xDB\xDB\xDB\xB2 \033[0;37m 7. Close Application\n\n");
     printf("\t\t\033[0;36m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> XxxxxxxxxxxxxxxxX <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
-    printf("\t\t\033[0;35mEnter your choice : \033[0;37m\n");
+    printf("\t\t\033[0;35mEnter your choice : \033[0;37m");
     switch (getch())
     {
     case '1':
@@ -231,14 +231,14 @@ void ADDBOOKS()
     file1 = fopen("Books.dat", "ab+");
     if (checkid(t) == 0)
     {
-        printf("\a\033[0;31mThe book id already exists\a\n");
+        printf("\t\t\t\a\033[0;31mThe book id already exists\a\n");
         getch();
         MAINPROGRAM();
     }
     booklist.id = t;
     printf("\t\t\t\033[0;37mBook Title:- \033[0;32m");
     scanf("%s", &booklist.name);
-    printf("\033[0;37mAuthor:- \033[0;32m");
+    printf("\t\t\t\033[0;37mAuthor:- \033[0;32m");
     scanf("%s", &booklist.Author);
     printf("\t\t\t\033[0;37mQuantity:- \033[0;32m");
     scanf("%d", &booklist.quantity);
@@ -273,7 +273,7 @@ void AVAILABLE_BOOKS()
     system("cls");
     printf("\033[0;33m\n\n\t          - - - - - - - - - - - - - - - - - - - - - AVAILABLE BOOKS - - - - - - - - - - - - - - - - - - - -");
     CONSOLE_XY(20, 5);
-    printf("\033[0;34m               ID    BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m");
+    printf("\033[0;34m              ID     BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m");
     file1 = fopen("Books.dat", "rb");
     while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
     {
