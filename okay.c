@@ -53,11 +53,13 @@ int checkid(int t);
 void AVAILABLE_BOOKS();
 void EDITBOOK();
 void SEARCH_BOOKS();
+void EXINTRO();
 
 // MAIN FUNCTION ----------------------------------------
 int main()
 {
-    MAINPROGRAM();
+    EXINTRO();
+    PASSWORD();
     return 0;
 }
 
@@ -88,6 +90,7 @@ void PASSWORD()
     char ch, pass[50], user[50];
     int i = 0, j;
     CONSOLE_XY(10, 4);
+    printf("\033[0;37m");
     for (j = 0; j < 20; j++)
     {
         Sleep(40);
@@ -193,24 +196,9 @@ void MAINPROGRAM()
         break;
     case '7':
     {
+        EXINTRO();
         system("cls");
-        printf("\033[0;35m");
-        CONSOLE_XY(10, 5);
-        printf("\t\t\t***************************************************\n");
-        CONSOLE_XY(10, 6);
-        printf("\t\t\t*\033[0;33m             LIBRARY MANAGEMENT SYSTEM           \033[0;35m*\n");
-        CONSOLE_XY(10, 7);
-        printf("\t\t\t*\033[0;37m               Project On C Language             \033[0;35m*\n");
-        CONSOLE_XY(10, 8);
-        printf("\t\t\t*                                                 \033[0;35m*\n");
-        CONSOLE_XY(10, 9);
-        printf("\t\t\t*                                                 \033[0;35m*\n");
-        CONSOLE_XY(10, 10);
-        printf("\t\t\t* \033[0;33m                                by- Bishal De   \033[0;35m*\n");
-        CONSOLE_XY(10, 11);
-        printf("\t\t\t***************************************************\n");
-        CONSOLE_XY(10, 12);
-        Sleep(3000);
+        printf("\033[0;37m");
         exit(0);
     }
     default:
@@ -224,7 +212,8 @@ void MAINPROGRAM()
 }
 
 void ADDBOOKS()
-{   system("cls");
+{
+    system("cls");
     int t;
     printf("\t\t\033[0;36m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADD BOOK  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
     printf("\t\t\t\033[0;33m**** ENTER INFORMATION HERE ****\n");
@@ -260,7 +249,7 @@ void ADDBOOKS()
     ADDBOOKS();
 }
 
-int checkid(int t) 
+int checkid(int t)
 {
     rewind(file1);
     while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
@@ -271,7 +260,7 @@ int checkid(int t)
 
 void AVAILABLE_BOOKS()
 {
-    int total = 0,money=0, j = 6;
+    int total = 0, money = 0, j = 6;
     system("cls");
     printf("\033[0;33m\n\n\t          - - - - - - - - - - - - - - - - - - - - - AVAILABLE BOOKS - - - - - - - - - - - - - - - - - - - -");
     CONSOLE_XY(20, 5);
@@ -293,7 +282,7 @@ void AVAILABLE_BOOKS()
         printf("%d", booklist.rackno);
         printf("\n\n");
         j++;
-        money+=booklist.Price*booklist.quantity;
+        money += booklist.Price * booklist.quantity;
         total = total + booklist.quantity;
     }
     CONSOLE_XY(20, j + 5);
@@ -325,7 +314,7 @@ void EDITBOOK()
                 int j = 4;
                 okay = 1;
                 printf("\t\t\t\033[0;34m          ID    BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m\n");
-                CONSOLE_XY(34, j);               
+                CONSOLE_XY(34, j);
                 printf("%d", booklist.id);
                 CONSOLE_XY(41, j);
                 printf("%s", booklist.name);
@@ -358,7 +347,7 @@ void EDITBOOK()
             }
         }
         if (c == 0)
-        {
+        {   printf("");
             printf("\t\t\t\t\033[0;31m\n\aNo record found\n");
         }
         printf("\n\n");
@@ -375,14 +364,10 @@ void SEARCH_BOOKS()
 {
     system("cls");
     int d;
-    CONSOLE_XY(20, 8);
-    printf("\033[0;33m################################## SEARCH BOOK ##################################");
-    CONSOLE_XY(20, 12);
-    printf("\033[0;34m1. Search By ID");
-    CONSOLE_XY(20, 13);
-    printf("2. Search By Name");
-    CONSOLE_XY(20, 15);
-    printf("\033[0;37mEnter Your Choice : ");
+    printf("\033[0;33m\t\n################################## SEARCH BOOK ##################################\n\n");
+    printf("\033[0;34m\t\t1. Search By ID\n");
+    printf("\t\t2. Search By Name\n\n");
+    printf("\t\033[0;37mEnter Your Choice : ");
     file1 = fopen("Books.dat", "rb+");
     rewind(file1);
     switch (getch())
@@ -390,42 +375,30 @@ void SEARCH_BOOKS()
     case '1':
     {
         system("cls");
-        CONSOLE_XY(25, 3);
-        printf("\033[0;33m ************** Search Books By ID **************");
-        CONSOLE_XY(20, 5);
-        printf("\033[0;37mEnter the book id : \033[0;35m");
+        printf("\033[0;33m\t+++++++++++++++++++++++ Search Books By ID ++++++++++++++++++++++\n\n");
+        printf("\033[0;37m\t\tEnter the book id : \033[0;35m");
         scanf("%d", &d);
-        CONSOLE_XY(20, 7);
-        printf("Searching........");
+        printf("\n\t\tSearching........\n\n");
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
         {
             if (booklist.id == d)
             {
                 Sleep(2);
-                CONSOLE_XY(20, 7);
-                printf("The Book is available");
-                CONSOLE_XY(20, 9);
-                printf("\033[0;37mID :-> \033[0;35m%d", booklist.id);
-                CONSOLE_XY(20, 10);
-                printf("\033[0;37mName :-> \033[0;35m%s", booklist.name);
-                CONSOLE_XY(20, 11);
-                printf("\033[0;37mAuthor :-> \033[0;35m%s ", booklist.Author);
-                CONSOLE_XY(20, 12);
-                printf("\033[0;37mQantity :-> \033[0;35m%d ", booklist.quantity);
-                CONSOLE_XY(20, 13);
-                printf("\033[0;37mPrice :-> \033[0;35mRs.%.2f", booklist.Price);
-                CONSOLE_XY(20, 14);
-                printf("\033[0;37mRack No :-> \033[0;35m%d ", booklist.rackno);
+                printf("\t\t\t\033[0;31mThe Book is available\n");
+                printf("\t\t\t\033[0;37mID :-> \033[0;35m%d \n", booklist.id);
+                printf("\t\t\t\033[0;37mName :-> \033[0;35m%s \n", booklist.name);
+                printf("\t\t\t\033[0;37mAuthor :-> \033[0;35m%s  \n", booklist.Author);
+                printf("\t\t\t\033[0;37mQuantity :-> \033[0;35m%d  \n", booklist.quantity);
+                printf("\t\t\t\033[0;37mPrice :-> \033[0;35mRs.%.2f \n", booklist.Price);
+                printf("\t\t\t\033[0;37mRack No :-> \033[0;35m%d  \n", booklist.rackno);
                 querybook = 't';
             }
         }
         if (querybook != 't')
         {
-            CONSOLE_XY(22, 9);
-            printf("\aNo Record Found");
+            printf("\t\t\a\033[0;31mNo Record Found\n");
         }
-        CONSOLE_XY(20, 17);
-        printf("\033[0;37mTry another search?(Y/N)");
+        printf("\n\t\t\033[0;37mTry another search?\033[0;33m(Y/N)");
         if (getch() == 'y')
             SEARCH_BOOKS();
         else
@@ -436,40 +409,29 @@ void SEARCH_BOOKS()
     {
         char s[15];
         system("cls");
-        CONSOLE_XY(25, 4);
-        printf("\033[0;33m ************** Search Books By Name **************");
-        CONSOLE_XY(20, 5);
-        printf("\033[0;37mEnter Book Name : \033[0;35m");
+        printf("\t\033[0;33m +++++++++++++++++++++++++ Search Books By Name +++++++++++++++++++++++\n\n");
+        printf("\t\t\033[0;37mEnter Book Name : \033[0;35m");
         scanf("%s", s);
         int d = 0;
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
         {
             if (strcmp(booklist.name, (s)) == 0)
             {
-                CONSOLE_XY(20, 7);
-                printf("The Book is available");
-                CONSOLE_XY(20, 9);
-                printf("\033[0;37mID :-> \033[0;35m%d", booklist.id);
-                CONSOLE_XY(20, 10);
-                printf("\033[0;37mName :-> \033[0;35m%s", booklist.name);
-                CONSOLE_XY(20, 11);
-                printf("\033[0;37mAuthor :-> \033[0;35m%s ", booklist.Author);
-                CONSOLE_XY(20, 12);
-                printf("\033[0;37mQantity :-> \033[0;35m%d ", booklist.quantity);
-                CONSOLE_XY(20, 13);
-                printf("\033[0;37mPrice :-> \033[0;35mRs.%.2f", booklist.Price);
-                CONSOLE_XY(20, 14);
-                printf("\033[0;37mRack No :-> \033[0;35m%d ", booklist.rackno);
+                printf("\n\t\t\033[0;31mThe Book is available\n");
+                printf("\t\t\t\033[0;37m\nID :-> \033[0;35m%d \n", booklist.id);
+                printf("\t\t\t\033[0;37mName :-> \033[0;35m%s \n", booklist.name);
+                printf("\t\t\t\033[0;37mAuthor :-> \033[0;35m%s  \n", booklist.Author);
+                printf("\t\t\t\033[0;37mQuantity :-> \033[0;35m%d  \n", booklist.quantity);
+                printf("\t\t\t\033[0;37mPrice :-> \033[0;35mRs.%.2f \n", booklist.Price);
+                printf("\t\t\t\033[0;37mRack No :-> \033[0;35m%d  \n", booklist.rackno);
                 d++;
             }
         }
         if (d == 0)
         {
-            CONSOLE_XY(22, 9);
-            printf("\aNo Record Found");
+            printf("\t\t\t\t\a\033[0;31m\nNo Record Found\n");
         }
-        CONSOLE_XY(20, 17);
-        printf("\033[0;37mTry another search?(Y/N)");
+        printf("\t\t\t\033[0;37m\nTry another search?\033[0;33m(Y/N)");
         if (getch() == 'y')
             SEARCH_BOOKS();
         else
@@ -483,16 +445,24 @@ void SEARCH_BOOKS()
     fclose(file1);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+void EXINTRO()
+{
+    system("cls");
+    printf("\033[0;35m");
+    CONSOLE_XY(10, 5);
+    printf("\t\t\t***************************************************\n");
+    CONSOLE_XY(10, 6);
+    printf("\t\t\t*\033[0;33m             LIBRARY MANAGEMENT SYSTEM           \033[0;35m*\n");
+    CONSOLE_XY(10, 7);
+    printf("\t\t\t*\033[0;37m               Project On C Language             \033[0;35m*\n");
+    CONSOLE_XY(10, 8);
+    printf("\t\t\t*                                                 \033[0;35m*\n");
+    CONSOLE_XY(10, 9);
+    printf("\t\t\t*                                                 \033[0;35m*\n");
+    CONSOLE_XY(10, 10);
+    printf("\t\t\t* \033[0;33m                                by- Bishal De   \033[0;35m*\n");
+    CONSOLE_XY(10, 11);
+    printf("\t\t\t***************************************************\n");
+    CONSOLE_XY(10, 12);
+    Sleep(1500);
+}
