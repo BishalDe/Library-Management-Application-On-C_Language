@@ -54,6 +54,7 @@ void AVAILABLE_BOOKS();
 void EDITBOOK();
 void SEARCH_BOOKS();
 void EXINTRO();
+void DELETEBOOK();
 
 // MAIN FUNCTION ----------------------------------------
 int main()
@@ -180,7 +181,7 @@ void MAINPROGRAM()
         ADDBOOKS();
         break;
     case '2':
-        //DELETEBOOK();
+        DELETEBOOK();
         break;
     case '3':
         SEARCH_BOOKS();
@@ -347,7 +348,8 @@ void EDITBOOK()
             }
         }
         if (c == 0)
-        {   printf("");
+        {
+            printf("");
             printf("\t\t\t\t\033[0;31m\n\aNo record found\n");
         }
         printf("\n\n");
@@ -449,20 +451,88 @@ void EXINTRO()
 {
     system("cls");
     printf("\033[0;35m");
-    CONSOLE_XY(10, 5);
     printf("\t\t\t***************************************************\n");
-    CONSOLE_XY(10, 6);
+    printf("\t\t\t*\033[0;33m                       SRMIST                    \033[0;35m*\n");
+    printf("\t\t\t*\033[0;31m        Programming For Problem Solving E-Lab    \033[0;35m*\n");
     printf("\t\t\t*\033[0;33m             LIBRARY MANAGEMENT SYSTEM           \033[0;35m*\n");
-    CONSOLE_XY(10, 7);
     printf("\t\t\t*\033[0;37m               Project On C Language             \033[0;35m*\n");
-    CONSOLE_XY(10, 8);
     printf("\t\t\t*                                                 \033[0;35m*\n");
-    CONSOLE_XY(10, 9);
     printf("\t\t\t*                                                 \033[0;35m*\n");
-    CONSOLE_XY(10, 10);
     printf("\t\t\t* \033[0;33m                                by- Bishal De   \033[0;35m*\n");
-    CONSOLE_XY(10, 11);
     printf("\t\t\t***************************************************\n");
-    CONSOLE_XY(10, 12);
-    Sleep(1500);
+    Sleep(2000);
+}
+
+void DELETEBOOK()
+{
+    int i, j = 5, flag = 0;
+    char c;
+    system("cls");
+    printf("\t\t******************** DELETE SECTION********************\n\n");
+    printf("\t\t\tEnter Book ID :-> ");
+    scanf("%d", &i);
+    file1 = fopen("Books.dat", "rb+");
+    while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+    {
+        if (booklist.id == i)
+        {
+            CONSOLE_XY(34, j - 1);
+            printf("\033[0;34mID     BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m");
+            CONSOLE_XY(34, j);
+            printf("%d", booklist.id);
+            CONSOLE_XY(41, j);
+            printf("%s", booklist.name);
+            CONSOLE_XY(54, j);
+            printf("%s", booklist.Author);
+            CONSOLE_XY(68, j);
+            printf("%d", booklist.quantity);
+            CONSOLE_XY(75, j);
+            printf("%.2f", booklist.Price);
+            CONSOLE_XY(88, j);
+            printf("%d", booklist.rackno);
+            printf("\n\n");
+            flag = 1;
+            printf("\t\t\t\033[0;33mDo you want to delete it?\033[0;37m(Y/N):");
+            c = getch();
+            if (c == 'y' || c == 'Y')
+            {
+                file2 = fopen("tempo.dat", "wb+");
+                rewind(file1);
+                while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+                {
+                    if (booklist.id != i)
+                    {
+                        fseek(file2, 0, SEEK_CUR);
+                        fwrite(&booklist, sizeof(booklist), 1, file2);
+                    }
+                }
+                fclose(file1);
+                fclose(file2);
+                remove("Books.dat");
+                rename("tempo.dat", "Books.dat");
+                file1 = fopen("Books.dat", "rb+");
+                printf("\n\t\t\t\033[0;31mThe record is sucessfully deleted\n\n");
+                printf("\t\t\t\033[0;37mDelete another record?\033[0;33m(Y/N)");
+                c = getch();
+                if (c == 'y' || c == 'Y')
+                {
+                    DELETEBOOK();
+                }
+                else
+                {
+                    MAINPROGRAM();
+                }
+            }
+            else
+            {
+                MAINPROGRAM();
+            }
+        }
+    }
+    if (!flag)
+    {
+        printf("Nothing Found");
+        getch();
+        DELETEBOOK();
+    }
 }
