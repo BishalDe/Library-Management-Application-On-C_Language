@@ -51,6 +51,7 @@ void MAINPROGRAM();
 void ADDBOOKS();
 int checkid(int t);
 void AVAILABLE_BOOKS();
+void EDITBOOK();
 
 // MAIN FUNCTION ----------------------------------------
 int main()
@@ -187,7 +188,7 @@ void MAINPROGRAM()
         AVAILABLE_BOOKS();
         break;
     case '6':
-        //EDITBOOK();
+        EDITBOOK();
         break;
     case '7':
     {
@@ -302,6 +303,88 @@ void AVAILABLE_BOOKS()
     getch();
     MAINPROGRAM();
 }
+
+void EDITBOOK()
+{
+    system("cls");
+    int c = 0;
+    int d, e;
+    CONSOLE_XY(20, 2);
+    printf("\033[0;36m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EDIT BOOK  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    char another = 'y';
+    while (another == 'y' || another == 'Y')
+    {
+        int okay = 0;
+        CONSOLE_XY(20, 3);
+        printf("\033[0;32mEnter The Book Id To Be Edited :- \033[0;37m");
+        scanf("%d", &d);
+        file1 = fopen("Books.dat", "rb+");
+        while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+        {
+            if (booklist.id == d)
+            {
+                int j = 5;
+                okay = 1;
+                CONSOLE_XY(20, 4);
+                printf("\033[0;34m              ID    BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m");
+                CONSOLE_XY(34, j);               
+                printf("%d", booklist.id);
+                CONSOLE_XY(41, j);
+                printf("%s", booklist.name);
+                CONSOLE_XY(54, j);
+                printf("%s", booklist.Author);
+                CONSOLE_XY(68, j);
+                printf("%d", booklist.quantity);
+                CONSOLE_XY(75, j);
+                printf("%.2f", booklist.Price);
+                CONSOLE_XY(88, j);
+                printf("%d", booklist.rackno);
+                CONSOLE_XY(15, 7);
+                printf("\033[0;32mThe Book Is Available..!");
+                CONSOLE_XY(15, 8);
+                printf("\033[0;32mThe Book ID : \033[0;37m%d", booklist.id);
+                CONSOLE_XY(15, 9);
+                printf("\033[0;32mEnter new name : \033[0;37m");
+                scanf("%s", booklist.name);
+                CONSOLE_XY(15, 10);
+                printf("\033[0;32mEnter new Author: \033[0;37m");
+                scanf("%s", booklist.Author);
+                CONSOLE_XY(15, 11);
+                printf("\033[0;32mEnter new quantity : \033[0;37m");
+                scanf("%d", &booklist.quantity);
+                CONSOLE_XY(15, 12);
+                printf("\033[0;32mEnter new price : \033[0;37m");
+                scanf("%f", &booklist.Price);
+                CONSOLE_XY(15, 13);
+                printf("\033[0;32mEnter new rackno : \033[0;37m");
+                scanf("%d", &booklist.rackno);
+                CONSOLE_XY(15, 14);
+                printf("\033[0;31mThe record is modified");
+                fseek(file1, ftell(file1) - sizeof(booklist), 0);
+                fwrite(&booklist, sizeof(booklist), 1, file1);
+                fclose(file1);
+                c = 1;
+            }
+        }
+        if (c == 0)
+        {
+            CONSOLE_XY(15, 9);
+            printf("\033[0;31m\aNo record found");
+        }
+        CONSOLE_XY(15, 16);
+        printf("\033[0;355mModify another Record?(Y/N)");
+        fflush(stdin);
+        another = getch();
+        if (another == 'y' || another == 'Y')
+            system("cls");
+    }
+    MAINPROGRAM();
+}
+
+
+
+
+
 
 
 
