@@ -543,14 +543,14 @@ void issuebooks(void)
     time_t t;
     t = time(NULL);
     struct tm tm = *localtime(&t);
-    int z, date=tm.tm_mday, month=tm.tm_mon+1, year=tm.tm_year+1900;
+    int z, date = tm.tm_mday, month = tm.tm_mon + 1, year = tm.tm_year + 1900;
     system("cls");
     printf("\t\t********************************ISSUE SECTION**************************\n\n");
     printf("\t\t\t\t1. Issue a Book\n");
     printf("\t\t\t\t2. View Issued Book\n");
     printf("\t\t\t\t3. Search Issued Book\n");
     printf("\t\t\t\t4. Remove Issued Book\n\n");
-    printf("\t\tEnter a Choice:");
+    printf("\t\tEnter Your Choice:");
     switch (getch())
     {
     case '1':
@@ -571,18 +571,18 @@ void issuebooks(void)
                 printf("The book record is available\n");
                 printf("There are %d unissued books in library \n", booklist.quantity);
 
-                printf("The name of book is %s", booklist.name);
+                printf("The name of book is %s\n", booklist.name);
 
                 printf("Enter student name:");
                 scanf("%s", booklist.stname);
 
-                printf("Issued date=%d-%d-%d\n",date,month,year);
+                printf("Issued date=%d-%d-%d\n", date, month, year);
 
                 printf("The BOOK of ID %d is issued\n", booklist.id);
                 booklist.issued.date = date;
                 booklist.issued.month = month;
                 booklist.issued.year = year;
-                booklist.duedate.date = booklist.issued.date + 15; //for return date
+                booklist.duedate.date = booklist.issued.date + 15;
                 booklist.duedate.month = booklist.issued.month;
                 booklist.duedate.year = booklist.issued.year;
                 if (booklist.duedate.date > 30)
@@ -612,39 +612,142 @@ void issuebooks(void)
             another = getche();
             fclose(file1);
         }
+    }
+    break;
+    case '2':
+    {
+        system("cls");
+        int j = 4;
+        printf("\t*******************************Issued book list*******************************\n");
+        CONSOLE_XY(2, 2);
+        printf("\t STUDENT NAME        ID         BOOK NAME         ISSUED DATE         RETURN DATE");
+        file1 = fopen("Issue.dat", "rb");
+        while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+        {
+            CONSOLE_XY(2 + 7, j);
+            printf("%s", booklist.stname);
+            CONSOLE_XY(22 + 7, j);
+            printf("%d", booklist.id);
+            CONSOLE_XY(33 + 7, j);
+            printf("%s", booklist.name);
+            CONSOLE_XY(52 + 7, j);
+            printf("%d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
+            CONSOLE_XY(72 + 7, j);
+            printf("%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+            j++;
+        }
+        fclose(file1);
+        CONSOLE_XY(1, 25);
+        getch();
+        issuebooks();
+    }
+    break;
+    case '3': //search issued books by id
+    {
+        system("cls");
+        printf("Enter Book ID:");
+        int p, c = 0;
+        char another = 'y';
+        while (another == 'y')
+        {
 
+            scanf("%d", &p);
+            file1 = fopen("Issue.dat", "rb");
+            while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+            {
+                if (booklist.id == p)
+                {
+                    CONSOLE_XY(10, 8);
+                    printf("The Book has taken by Mr. %s", booklist.stname);
+                    CONSOLE_XY(10, 9);
+                    printf("Issued Date:%d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
+                    CONSOLE_XY(10, 10);
+                    printf("Returning Date:%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+                    printf("\nPress any key.......\n");
+                    getch();
+                    c = 1;
+                }
+            }
+            fflush(stdin);
+            fclose(file1);
+            if (c == 0)
+            {
+                CONSOLE_XY(10, 8);
+                printf("\nNo Record Found\n");
+            }
+            CONSOLE_XY(10, 13);
+            printf("Try Another Search?(Y/N)");
+            another = getch();
+            (another == 'y' || another == 'Y') ? issuebooks() : MAINPROGRAM();
+        }
+    }
+    break;
+
+    case '4': 
+    {
+        system("cls");
+        int b;
+        FILE *fg; 
+        char another = 'y';
+        while (another == 'y')
+        {
+            CONSOLE_XY(10, 5);
+            printf("Enter book id to remove:");
+            scanf("%d", &b);
+            file1 = fopen("Issue.dat", "rb+");
+            while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+            {
+                if (booklist.id == b)
+                {
+                    CONSOLE_XY(10, 8);
+                    printf("The Book has taken by Mr. %s", booklist.stname);
+                    CONSOLE_XY(10, 9);
+                    printf("Issued Date:%d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
+                    CONSOLE_XY(10, 10);
+                    printf("Returning Date:%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+                    findbook = 't';
+                }
+                if (findbook == 't')
+                {
+                    CONSOLE_XY(10, 12);
+                    printf("Do You Want to Remove it?(Y/N)");
+                    if (getch() == 'y')
+                    {
+                        fg = fopen("record.dat", "wb+");
+                        rewind(file1);
+                        while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+                        {
+                            if (booklist.id != b)
+                            {
+                                fseek(file1, 0, SEEK_CUR);
+                                fwrite(&booklist, sizeof(booklist), 1, fg);
+                            }
+                        }
+                        fclose(file1);
+                        fclose(fg);
+                        remove("Issue.dat");
+                        rename("record.dat", "Issue.dat");
+                        CONSOLE_XY(10, 14);
+                        printf("The issued book is removed from list");
+                    }
+                }
+                if (findbook != 't')
+                {
+                    CONSOLE_XY(10, 15);
+                    printf("No Record Found");
+                }
+            }
+            CONSOLE_XY(10, 16);
+            printf("Delete any more?(Y/N)");
+            another = getch();
+        }
+    }
+    default:
+        CONSOLE_XY(10, 18);
+        printf("\aWrong Entry!!");
+        getch();
+        issuebooks();
         break;
     }
-    case '2':
-       {
-              system("cls");
-              int j = 4;
-              printf("*******************************Issued book list*******************************\n");
-              CONSOLE_XY(2, 2);
-              printf("STUDENT NAME    CATEGORY    ID    BOOK NAME    ISSUED DATE    RETURN DATE");
-              file1 = fopen("Issue.dat", "rb");
-              while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
-              {
-                     CONSOLE_XY(2, j);
-                     printf("%s", booklist.stname);
-                     CONSOLE_XY(18, j);
-                     printf("%s", booklist.cat);
-                     CONSOLE_XY(30, j);
-                     printf("%d", booklist.id);
-                     CONSOLE_XY(36, j);
-                     printf("%s", booklist.name);
-                     CONSOLE_XY(51, j);
-                     printf("%d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
-                     CONSOLE_XY(65, j);
-                     printf("%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
-
-                     CONSOLE_XY(50, 25);
-                     j++;
-              }
-              fclose(file1);
-              CONSOLE_XY(1, 25);
-              getch();
-              issuebooks();
-       }      break;
-    }
+    CONSOLE_XY(1, 30);
 }
