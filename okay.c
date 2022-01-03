@@ -55,12 +55,13 @@ void EDITBOOK();
 void SEARCH_BOOKS();
 void EXINTRO();
 void DELETEBOOK();
+void issuebooks();
 
 // MAIN FUNCTION ----------------------------------------
 int main()
 {
-    EXINTRO();
-    PASSWORD();
+    //EXINTRO();
+    issuebooks();
     return 0;
 }
 
@@ -187,7 +188,7 @@ void MAINPROGRAM()
         SEARCH_BOOKS();
         break;
     case '4':
-        //ISSUE();
+        issuebooks();
         break;
     case '5':
         AVAILABLE_BOOKS();
@@ -534,5 +535,116 @@ void DELETEBOOK()
         printf("Nothing Found");
         getch();
         DELETEBOOK();
+    }
+}
+
+void issuebooks(void)
+{
+    time_t t;
+    t = time(NULL);
+    struct tm tm = *localtime(&t);
+    int z, date=tm.tm_mday, month=tm.tm_mon+1, year=tm.tm_year+1900;
+    system("cls");
+    printf("\t\t********************************ISSUE SECTION**************************\n\n");
+    printf("\t\t\t\t1. Issue a Book\n");
+    printf("\t\t\t\t2. View Issued Book\n");
+    printf("\t\t\t\t3. Search Issued Book\n");
+    printf("\t\t\t\t4. Remove Issued Book\n\n");
+    printf("\t\tEnter a Choice:");
+    switch (getch())
+    {
+    case '1':
+    {
+        system("cls");
+        int c = 0;
+        char another = 'y';
+        while (another == 'y')
+        {
+            system("cls");
+            printf("***Issue Book section***\n");
+            printf("Enter the Book Id:");
+            scanf("%d", &z);
+            file1 = fopen("Books.dat", "rb");
+            file2 = fopen("Issue.dat", "ab+");
+            if (checkid(z) == 0)
+            {
+                printf("The book record is available\n");
+                printf("There are %d unissued books in library \n", booklist.quantity);
+
+                printf("The name of book is %s", booklist.name);
+
+                printf("Enter student name:");
+                scanf("%s", booklist.stname);
+
+                printf("Issued date=%d-%d-%d\n",date,month,year);
+
+                printf("The BOOK of ID %d is issued\n", booklist.id);
+                booklist.issued.date = date;
+                booklist.issued.month = month;
+                booklist.issued.year = year;
+                booklist.duedate.date = booklist.issued.date + 15; //for return date
+                booklist.duedate.month = booklist.issued.month;
+                booklist.duedate.year = booklist.issued.year;
+                if (booklist.duedate.date > 30)
+                {
+                    booklist.duedate.month += booklist.duedate.date / 30;
+                    booklist.duedate.date -= 30;
+                }
+                if (booklist.duedate.month > 12)
+                {
+                    booklist.duedate.year += booklist.duedate.month / 12;
+                    booklist.duedate.month -= 12;
+                }
+
+                printf("To be return:%d-%d-%d\n", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+                fseek(file2, sizeof(booklist), SEEK_END);
+                fwrite(&booklist, sizeof(booklist), 1, file2);
+                fclose(file2);
+                c = 1;
+            }
+            if (c == 0)
+            {
+
+                printf("No record found\n");
+            }
+            printf("Issue any more(Y/N):");
+            fflush(stdin);
+            another = getche();
+            fclose(file1);
+        }
+
+        break;
+    }
+    case '2':
+       {
+              system("cls");
+              int j = 4;
+              printf("*******************************Issued book list*******************************\n");
+              CONSOLE_XY(2, 2);
+              printf("STUDENT NAME    CATEGORY    ID    BOOK NAME    ISSUED DATE    RETURN DATE");
+              file1 = fopen("Issue.dat", "rb");
+              while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
+              {
+                     CONSOLE_XY(2, j);
+                     printf("%s", booklist.stname);
+                     CONSOLE_XY(18, j);
+                     printf("%s", booklist.cat);
+                     CONSOLE_XY(30, j);
+                     printf("%d", booklist.id);
+                     CONSOLE_XY(36, j);
+                     printf("%s", booklist.name);
+                     CONSOLE_XY(51, j);
+                     printf("%d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
+                     CONSOLE_XY(65, j);
+                     printf("%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+
+                     CONSOLE_XY(50, 25);
+                     j++;
+              }
+              fclose(file1);
+              CONSOLE_XY(1, 25);
+              getch();
+              issuebooks();
+       }      break;
     }
 }
