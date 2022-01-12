@@ -19,8 +19,9 @@
 #include <windows.h>
 
 // GLOBAL VARIABLES ----------------------
-FILE *file1, *file2;                                              // File Pointer variable
-char querybook, findbook, password[50] = "z", username[50] = "z"; //User Credentials
+FILE *file1, *file2; // File Pointer variable
+char querybook, findbook;
+char password[50] = "5741", username[50] = "bishal"; //User Credentials
 COORD coordinates = {0, 0};
 
 struct date
@@ -36,9 +37,7 @@ struct books
     char Author[20];
     int quantity;
     float Price;
-    int count;
     int rackno;
-    char *cat;
     struct date issued;
     struct date duedate;
 } booklist;
@@ -61,6 +60,7 @@ void BOOK_ISSUE();
 int main()
 {
     //EXINTRO();
+    //PASSWORD();
     BOOK_ISSUE();
     return 0;
 }
@@ -292,6 +292,8 @@ void AVAILABLE_BOOKS()
     CONSOLE_XY(20, j + 6);
     printf("\033[0;31m Total Cost Of Books = Rs \033[0;37m%d", money);
     fclose(file1);
+    CONSOLE_XY(20, j + 8);
+    printf("\033[0;33m Press Any Key....");
     getch();
     MAINPROGRAM();
 }
@@ -313,9 +315,9 @@ void EDITBOOK()
         {
             if (booklist.id == d)
             {
-                int j = 4;
+                int j = 5;
                 okay = 1;
-                printf("\t\t\t\033[0;34m          ID    BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m\n");
+                printf("\n\t\t\t\033[0;34m          ID    BOOK NAME     AUTHOR       QTY     PRICE     RackNo \033[0;37m\n");
                 CONSOLE_XY(34, j);
                 printf("%d", booklist.id);
                 CONSOLE_XY(41, j);
@@ -341,7 +343,7 @@ void EDITBOOK()
                 scanf("%f", &booklist.Price);
                 printf("\t\t\t\t\033[0;32mEnter new rackno : \033[0;37m");
                 scanf("%d", &booklist.rackno);
-                printf("\t\t\t\t\033[0;31mThe record is modified");
+                printf("\n\t\t\t\t\033[0;31mThe record is modified");
                 fseek(file1, ftell(file1) - sizeof(booklist), 0);
                 fwrite(&booklist, sizeof(booklist), 1, file1);
                 fclose(file1);
@@ -382,6 +384,7 @@ void SEARCH_BOOKS()
         printf("\033[0;37m\t\tEnter the book id : \033[0;35m");
         scanf("%d", &d);
         printf("\n\t\tSearching........\n\n");
+        int flag = 1;
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
         {
             if (booklist.id == d)
@@ -394,11 +397,12 @@ void SEARCH_BOOKS()
                 printf("\t\t\t\033[0;37mQuantity :-> \033[0;35m%d  \n", booklist.quantity);
                 printf("\t\t\t\033[0;37mPrice :-> \033[0;35mRs.%.2f \n", booklist.Price);
                 printf("\t\t\t\033[0;37mRack No :-> \033[0;35m%d  \n", booklist.rackno);
-                querybook = 't';
+                flag = 0;
             }
         }
-        if (querybook != 't')
+        if (flag != 0)
         {
+            flag = 1;
             printf("\t\t\a\033[0;31mNo Record Found\n");
         }
         printf("\n\t\t\033[0;37mTry another search?\033[0;33m(Y/N)");
@@ -415,26 +419,28 @@ void SEARCH_BOOKS()
         printf("\t\033[0;33m +++++++++++++++++++++++++ Search Books By Name +++++++++++++++++++++++\n\n");
         printf("\t\t\033[0;37mEnter Book Name : \033[0;35m");
         scanf("%s", s);
-        int d = 0;
+        int d = 1;
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
         {
             if (strcmp(booklist.name, (s)) == 0)
             {
-                printf("\n\t\t\033[0;31mThe Book is available\n");
-                printf("\t\t\t\033[0;37m\nID :-> \033[0;35m%d \n", booklist.id);
+                printf("\n\t\t\033[0;31mThe Book is available\n\n");
+                printf("\t\t\t\033[0;37mID :-> \033[0;35m%d \n", booklist.id);
                 printf("\t\t\t\033[0;37mName :-> \033[0;35m%s \n", booklist.name);
                 printf("\t\t\t\033[0;37mAuthor :-> \033[0;35m%s  \n", booklist.Author);
                 printf("\t\t\t\033[0;37mQuantity :-> \033[0;35m%d  \n", booklist.quantity);
                 printf("\t\t\t\033[0;37mPrice :-> \033[0;35mRs.%.2f \n", booklist.Price);
                 printf("\t\t\t\033[0;37mRack No :-> \033[0;35m%d  \n", booklist.rackno);
-                d++;
+                d = 0;
+                break;
             }
         }
-        if (d == 0)
+        if (d != 0)
         {
-            printf("\t\t\t\t\a\033[0;31m\nNo Record Found\n");
+            d = 1;
+            printf("\n\t\t\a\033[0;31mNo Record Found\n");
         }
-        printf("\t\t\t\033[0;37m\nTry another search?\033[0;33m(Y/N)");
+        printf("\n\t\t\033[0;37mTry another search?\033[0;33m(Y/N)");
         if (getch() == 'y')
             SEARCH_BOOKS();
         else
@@ -497,7 +503,7 @@ void DELETEBOOK()
             c = getch();
             if (c == 'y' || c == 'Y')
             {
-                file2 = fopen("tempo.dat", "w+");
+                file2 = fopen("temporary.txt", "w+");
                 rewind(file1);
                 while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
                 {
@@ -510,7 +516,7 @@ void DELETEBOOK()
                 fclose(file1);
                 fclose(file2);
                 remove("Books.txt");
-                rename("tempo.txt", "Books.txt");
+                rename("temporary.txt", "Books.txt");
                 file1 = fopen("Books.txt", "rb+");
                 printf("\n\t\t\t\033[0;31mThe record is sucessfully deleted\n\n");
                 printf("\t\t\t\033[0;37mDelete another record?\033[0;33m(Y/N)");
@@ -546,10 +552,9 @@ void BOOK_ISSUE(void)
     int z, date = tm.tm_mday, month = tm.tm_mon + 1, year = tm.tm_year + 1900;
     system("cls");
     printf("\t\t\033[0;33m******************************** ISSUE SECTION **************************\n\n");
-    printf("\t\t\t\t\033[0;37m1. Issue a Book\n");
-    printf("\t\t\t\t2. View Issued Book\n");
-    printf("\t\t\t\t3. Search Issued Book\n");
-    printf("\t\t\t\t4. Remove Issued Book\n\n");
+    printf("\t\t\t\033[0;37m1. Issue a Book               2. View Issued Book\n");
+    printf("\t\t\t3. Search Issued Book         4. Remove Issued Book\n");
+    printf("\t\t\t\033[0;37m5. Back to Main Menu\n\n");
     printf("\t\t\033[0;33mEnter Your Choice:");
     switch (getch())
     {
@@ -562,19 +567,19 @@ void BOOK_ISSUE(void)
         {
             system("cls");
             printf("\t\t\033[0;33m******************************** ISSUE BOOK SECTION **************************\n\n\n");
-            printf("\t\t\t\033[0;37mEnter the Book Id:\033[0;32m");
+            printf("\t\t\t\033[0;37mEnter The Book Id:\033[0;32m");
             scanf("%d", &z);
             file1 = fopen("Books.txt", "r");
             file2 = fopen("Issue.txt", "a+");
             if (CHECK_BOOK(z) == 0)
             {
-                printf("\n\t\t\t\033[0;31mThe book record is available\n");
-                printf("\t\t\t\033[0;36mThe name of book is\033[0;37m %s\n", booklist.name);
+                printf("\n\t\t\t\033[0;31mThe Book Is Available\n");
+                printf("\t\t\t\033[0;36mThe Book Title Is ->\033[0;37m %s\n", booklist.name);
 
-                printf("\t\t\t\033[0;36mEnter student name : \033[0;37m");
+                printf("\t\t\t\033[0;36mEnter Student Name -> \033[0;37m");
                 scanf("%s", booklist.stname);
-                printf("\t\t\t\033[0;33mIssued date=\033[0;36m%d-%d-%d\n", date, month, year);
-                printf("\t\t\tThe BOOK of ID \033[0;37m%d\033[0;33m is issued\n", booklist.id);
+                printf("\t\t\t\033[0;33mIssued date -> \033[0;36m %d-%d-%d\n\n", date, month, year);
+                printf("\t\t\t\033[0;33mThe Book With ID \033[0;37m%d\033[0;33m is issued to \033[0;37m%s\033[0;33m\n", booklist.id, booklist.stname);
                 booklist.issued.date = date;
                 booklist.issued.month = month;
                 booklist.issued.year = year;
@@ -592,7 +597,7 @@ void BOOK_ISSUE(void)
                     booklist.duedate.month -= 12;
                 }
 
-                printf("\t\t\t\033[0;34mTo be return : \033[0;37m%d-%d-%d\n", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+                printf("\t\t\t\033[0;34mTo Be Returned On -> \033[0;37m %d-%d-%d\n", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
                 fseek(file2, sizeof(booklist), SEEK_END);
                 fwrite(&booklist, sizeof(booklist), 1, file2);
                 fclose(file2);
@@ -607,8 +612,8 @@ void BOOK_ISSUE(void)
             fflush(stdin);
             another = getche();
             fclose(file1);
-            if(another != 'y' || another != 'Y')
-                MAINPROGRAM();
+            if (another != 'y' || another != 'Y')
+                BOOK_ISSUE();
         }
     }
     break;
@@ -620,6 +625,7 @@ void BOOK_ISSUE(void)
         CONSOLE_XY(2, 2);
         printf("\t\033[0;35m STUDENT NAME        ID         BOOK NAME         ISSUED DATE         RETURN DATE\033[0;37m");
         file1 = fopen("Issue.txt", "r");
+        int flag1 = 0;
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
         {
             CONSOLE_XY(2 + 7, j);
@@ -633,14 +639,21 @@ void BOOK_ISSUE(void)
             CONSOLE_XY(72 + 7, j);
             printf("%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
             j++;
+            flag1 = 1;
+        }
+        if (flag1 != 1)
+        {
+            printf("\n\n\n\n\n\n\t\t\033[0;31mNo Record Found\n\n");
+            
         }
         fclose(file1);
         CONSOLE_XY(1, 25);
+        printf("\n\n\033[0;33m\t\tPress Any Key....");
         getch();
         BOOK_ISSUE();
     }
     break;
-    case '3': //search issued books by id
+    case '3':
     {
         system("cls");
         printf("\t\t\033[0;33m******************************** SEARCH ISSUE BOOK SECTION **************************\n\n\n");
@@ -652,17 +665,20 @@ void BOOK_ISSUE(void)
 
             scanf("%d", &p);
             file1 = fopen("Issue.txt", "r");
+            int j=8;
             while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
             {
                 if (booklist.id == p)
                 {
-                    CONSOLE_XY(10, 8);
-                    printf("\t\t\033[0;35mThe Book has taken by :\033[0;37mMr. %s", booklist.stname);
-                    CONSOLE_XY(10, 9);
+                    CONSOLE_XY(10, j);
+                    printf("\t\t\033[0;35mThe Book has taken by :\033[0;37m %s", booklist.stname);
+                    CONSOLE_XY(10, j+1);
                     printf("\t\t\033[0;35mIssued Date : \033[0;37m %d-%d-%d", booklist.issued.date, booklist.issued.month, booklist.issued.year);
-                    CONSOLE_XY(10, 10);
+                    CONSOLE_XY(10, j+2);
                     printf("\t\t\033[0;35mReturning Date : \033[0;37m%d-%d-%d", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
+                    printf("\n\t\t---------------------------------------------------------\n");
                     c = 1;
+                    j+=5;
                 }
             }
             fflush(stdin);
@@ -678,22 +694,26 @@ void BOOK_ISSUE(void)
     }
     break;
 
-    case '4': 
+    case '4':
     {
         system("cls");
         int b;
-        FILE *fg; 
+        FILE *fg;
         char another = 'y';
         while (another == 'y')
-        {   printf("\t\t\033[0;33m******************************** DELETE ISSUE BOOK SECTION **************************\n\n\n");
+        {
+            printf("\t\t\033[0;33m******************************** DELETE ISSUE BOOK SECTION **************************\n\n\n");
             printf("\t\t\t\033[0;37mEnter book id to remove : \033[0;32m");
             scanf("%d", &b);
+            printf("\t\t\t\033[0;37mEnter Student Name : \033[0;32m");
+            char studentname[50];
+            scanf("%s", &studentname);
             file1 = fopen("Issue.txt", "r+");
             while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
             {
-                if (booklist.id == b)
+                if (booklist.id == b && strcmp(booklist.stname,studentname) == 0)
                 {
-                    printf("\t\t\t\033[0;37mThe Book has taken by \033[0;33m Mr. %s\n", booklist.stname);
+                    printf("\n\t\t\t\033[0;37mThe Book has taken by \033[0;33m %s\n", booklist.stname);
                     printf("\t\t\t\033[0;37mIssued Date : \033[0;33m%d-%d-%d\n", booklist.issued.date, booklist.issued.month, booklist.issued.year);
                     printf("\t\t\t\033[0;37mReturning Date : \033[0;33m%d-%d-%d\n", booklist.duedate.date, booklist.duedate.month, booklist.duedate.year);
                     findbook = 't';
@@ -701,14 +721,14 @@ void BOOK_ISSUE(void)
                 if (findbook == 't')
                 {
                     CONSOLE_XY(10, 12);
-                    printf("\t\t\033[0;33mDo You Want to Remove it?033[0;33m(Y/N)");
+                    printf("\t\t\033[0;37mDo You Want to Remove it?\033[0;33m(Y/N)");
                     if (getch() == 'y')
                     {
                         fg = fopen("record.dat", "wb+");
                         rewind(file1);
                         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
                         {
-                            if (booklist.id != b)
+                            if (booklist.id != b && strcmp(booklist.stname,studentname ) != 0)
                             {
                                 fseek(file1, 0, SEEK_CUR);
                                 fwrite(&booklist, sizeof(booklist), 1, fg);
@@ -729,10 +749,18 @@ void BOOK_ISSUE(void)
                 }
             }
             CONSOLE_XY(10, 16);
-            printf("\t\t\t\033[0;31mDelete any more?\t\t\t\033[0;37m(Y/N)");
+            printf("\t\t\t\033[0;33mDelete any more?\t\t\t\033[0;37m(Y/N)");
             another = getch();
+            if (another != 'y' || another != 'Y')
+                BOOK_ISSUE();
+
         }
     }
+    case '5':
+    {
+        MAINPROGRAM();
+    }
+    break;
     default:
         CONSOLE_XY(10, 18);
         printf("\t\t\033[0;31m\aWrong Entry!!");

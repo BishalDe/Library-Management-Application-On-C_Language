@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "time.h": "c",
+        "ctype.h": "c",
+        "direct.h": "c",
+        "windows.h": "c",
+        "string.h": "c"
+    }
+}
