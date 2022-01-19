@@ -59,9 +59,8 @@ void BOOK_ISSUE();
 // MAIN FUNCTION ----------------------------------------
 int main()
 {
-    //EXINTRO();
-    //PASSWORD();
-    BOOK_ISSUE();
+    EXINTRO();
+    PASSWORD();
     return 0;
 }
 
@@ -218,8 +217,8 @@ void ADDBOOKS()
     system("cls");
     int t;
     printf("\t\t\033[0;36m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADD BOOK  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
-    printf("\t\t\t\033[0;33m**** ENTER INFORMATION HERE ****\n");
-    printf("\t\t\t\033[0;37mBook ID:- \033[0;32m");
+    printf("\n\t\t\t\033[0;33m------ ENTER INFORMATION HERE ------\n");
+    printf("\t\t\t\033[0;37mEnter BOOK ID -> \033[0;32m");
     scanf("%d", &t);
     file1 = fopen("Books.txt", "ab+");
     if (CHECK_BOOK(t) == 0)
@@ -229,15 +228,15 @@ void ADDBOOKS()
         MAINPROGRAM();
     }
     booklist.id = t;
-    printf("\t\t\t\033[0;37mBook Title:- \033[0;32m");
+    printf("\t\t\t\033[0;37mEnter BOOK TITLE -> \033[0;32m");
     scanf("%s", &booklist.name);
-    printf("\t\t\t\033[0;37mAuthor:- \033[0;32m");
+    printf("\t\t\t\033[0;37mEnter AUTHOR'S NAME -> \033[0;32m");
     scanf("%s", &booklist.Author);
-    printf("\t\t\t\033[0;37mQuantity:- \033[0;32m");
+    printf("\t\t\t\033[0;37mEnter QUANTITY -> \033[0;32m");
     scanf("%d", &booklist.quantity);
-    printf("\t\t\t\033[0;37mPrice:- \033[0;32m");
+    printf("\t\t\t\033[0;37mEnter PRICE Per BOOK -> \033[0;32m");
     scanf("%f", &booklist.Price);
-    printf("\t\t\t\033[0;37mRack No:- \033[0;32m");
+    printf("\t\t\t\033[0;37mEnter The RACK NUMBER -> \033[0;32m");
     scanf("%d", &booklist.rackno);
     fseek(file1, 0, SEEK_END);
     fwrite(&booklist, sizeof(booklist), 1, file1);
@@ -333,15 +332,15 @@ void EDITBOOK()
                 printf("\n\n");
                 printf("\n\t\t\t\033[0;36mThe Book Is Available..!\n");
                 printf("\t\t\t\t\033[0;32mThe Book ID : \033[0;37m%d\n", booklist.id);
-                printf("\t\t\t\t\033[0;32mEnter new name : \033[0;37m");
+                printf("\t\t\t\t\033[0;32mEnter New TITLE : \033[0;37m");
                 scanf("%s", booklist.name);
-                printf("\t\t\t\t\033[0;32mEnter new Author: \033[0;37m");
+                printf("\t\t\t\t\033[0;32mEnter New AUTHOR'S NAME: \033[0;37m");
                 scanf("%s", booklist.Author);
-                printf("\t\t\t\t\033[0;32mEnter new quantity : \033[0;37m");
+                printf("\t\t\t\t\033[0;32mEnter New QUANTITY : \033[0;37m");
                 scanf("%d", &booklist.quantity);
-                printf("\t\t\t\t\033[0;32mEnter new price : \033[0;37m");
+                printf("\t\t\t\t\033[0;32mEnter New PRICE : \033[0;37m");
                 scanf("%f", &booklist.Price);
-                printf("\t\t\t\t\033[0;32mEnter new rackno : \033[0;37m");
+                printf("\t\t\t\t\033[0;32mEnter New RACK NUMBER : \033[0;37m");
                 scanf("%d", &booklist.rackno);
                 printf("\n\t\t\t\t\033[0;31mThe record is modified");
                 fseek(file1, ftell(file1) - sizeof(booklist), 0);
@@ -369,10 +368,10 @@ void SEARCH_BOOKS()
 {
     system("cls");
     int d;
-    printf("\033[0;33m\t\n################################## SEARCH BOOK ##################################\n\n");
-    printf("\033[0;34m\t\t1. Search By ID\n");
-    printf("\t\t2. Search By Name\n\n");
-    printf("\t\033[0;37mEnter Your Choice : ");
+    printf("\033[0;33m\n\t\t################################## SEARCH BOOK ##################################\n\n");
+    printf("\033[0;34m\t\t\t1. Search By ID\n\n");
+    printf("\t\t\t2. Search By Name\n\n");
+    printf("\t\t\033[0;37mEnter Your Choice -> ");
     file1 = fopen("Books.txt", "r+");
     rewind(file1);
     switch (getch())
@@ -381,7 +380,7 @@ void SEARCH_BOOKS()
     {
         system("cls");
         printf("\033[0;33m\t+++++++++++++++++++++++ Search Books By ID ++++++++++++++++++++++\n\n");
-        printf("\033[0;37m\t\tEnter the book id : \033[0;35m");
+        printf("\033[0;37m\t\tEnter BOOK ID -> \033[0;35m");
         scanf("%d", &d);
         printf("\n\t\tSearching........\n\n");
         int flag = 1;
@@ -390,7 +389,7 @@ void SEARCH_BOOKS()
             if (booklist.id == d)
             {
                 Sleep(2);
-                printf("\t\t\t\033[0;31mThe Book is available\n");
+                printf("\t\t\t\033[0;31mThe Book is available\n\n");
                 printf("\t\t\t\033[0;37mID :-> \033[0;35m%d \n", booklist.id);
                 printf("\t\t\t\033[0;37mName :-> \033[0;35m%s \n", booklist.name);
                 printf("\t\t\t\033[0;37mAuthor :-> \033[0;35m%s  \n", booklist.Author);
@@ -417,7 +416,7 @@ void SEARCH_BOOKS()
         char s[15];
         system("cls");
         printf("\t\033[0;33m +++++++++++++++++++++++++ Search Books By Name +++++++++++++++++++++++\n\n");
-        printf("\t\t\033[0;37mEnter Book Name : \033[0;35m");
+        printf("\t\t\033[0;37mEnter Book Name -> \033[0;35m");
         scanf("%s", s);
         int d = 1;
         while (fread(&booklist, sizeof(booklist), 1, file1) == 1)
@@ -553,9 +552,9 @@ void BOOK_ISSUE(void)
     system("cls");
     printf("\t\t\033[0;33m******************************** ISSUE SECTION **************************\n\n");
     printf("\t\t\t\033[0;37m1. Issue a Book               2. View Issued Book\n");
-    printf("\t\t\t3. Search Issued Book         4. Remove Issued Book\n");
+    printf("\t\t\t3. Search Issued Book         4. Submit Book\n");
     printf("\t\t\t\033[0;37m5. Back to Main Menu\n\n");
-    printf("\t\t\033[0;33mEnter Your Choice:");
+    printf("\t\t\033[0;33mEnter Your Choice -> ");
     switch (getch())
     {
     case '1':
@@ -646,7 +645,7 @@ void BOOK_ISSUE(void)
             printf("\n\n\n\n\n\n\t\t\033[0;31mNo Record Found\n\n");
         }
         fclose(file1);
-        CONSOLE_XY(1, 25);
+        CONSOLE_XY(1, j+3);
         printf("\n\n\033[0;33m\t\tPress Any Key....");
         getch();
         BOOK_ISSUE();
@@ -699,7 +698,7 @@ void BOOK_ISSUE(void)
         int b = 0;
         char studentname[50];
         FILE *file3;
-        printf("\t\t\033[0;33m******************************** DELETE ISSUE BOOK SECTION **************************\n\n\n");
+        printf("\t\t\033[0;33m******************************** SUBMIT ISSUE BOOK SECTION **************************\n\n\n");
         printf("\t\t\t\033[0;37mEnter book id to remove : \033[0;32m");
         scanf("%d", &b);
         printf("\t\t\t\033[0;37mEnter Student Name : \033[0;32m");
