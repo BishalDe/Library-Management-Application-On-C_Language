@@ -352,7 +352,7 @@ void EDITBOOK()
         if (c == 0)
         {
             printf("");
-            printf("\t\t\t\t\033[0;31m\n\aNo record found\n");
+            printf("\n\t\t\t\t\033[0;31m\aNo record found\n");
         }
         printf("\n\n");
         printf("\t\t\t\t\033[0;355mModify another Record?(Y/N)");
@@ -734,7 +734,7 @@ void BOOK_ISSUE(void)
                 }
             }
         }
-        if (b != 1)
+        if (b == 0 )
         {
             b = 0;
             printf("\n\t\t\t\033[0;31mNo record found\n");
