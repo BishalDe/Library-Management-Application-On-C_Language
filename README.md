@@ -1,6 +1,5 @@
 
 # Library Management Application
-<img src="https://i.pinimg.com/originals/4c/79/70/4c7970c030c4b8a8322171dd6a498cb0.gif" width="1000" height="400"  />
 The Library Management System is a project that can Issue books for an library. The system can manage to issue books to every individual person and keep a record of it. The purpose of this system is to help and manage for giving efficient service. The Library Management System is developed in a simple console application; the system can only be access with user login information i.e [Username & Password]. The user can do many things in the application, he/she can add new books, list all the books, modify book, and search book and the most important is issue a book. The system provides you some functionality that enables to keep a track on the books and it also stores the date on which it has to be returned. The inputted data are stored as a text file[.txt]. The Library Management System was built in a simple coding structure of C to ensure that beginner can learn something in this system
 
 
@@ -24,6 +23,19 @@ To run this project, you will need to put the following credentials.
 ## 🛠 Skills
 C-Language
 
+## Screenshots
+
+![App Screenshot](https://i.ibb.co/MgDhPkd/Capture.png)
+
+![App Screenshot](https://i.ibb.co/synsKFC/Capture.png)
+
+![App Screenshot](https://i.ibb.co/QXDS6J6/Capture5.png)
+
+![App Screenshot](https://i.ibb.co/wyH1FtW/Capture2.png)
+
+![App Screenshot](https://i.ibb.co/5nTYRYW/Capture1.png)
+
+![App Screenshot](https://i.ibb.co/bBrQTxG/Captu1re.png)
 
 ## Authors
 
